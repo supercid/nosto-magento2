@@ -25,6 +25,9 @@
             <multicurrency>
                 <method>undefined</method>
             </multicurrency>
+            <pricevariation>
+                <enabled>0</enabled>
+            </pricevariation>
         </nosto>
     </default>
 </config>

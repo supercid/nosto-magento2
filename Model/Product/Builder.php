@@ -45,6 +45,8 @@ use Magento\Review\Model\ReviewFactory;
 use Magento\Store\Model\Store;
 use Nosto\NostoException;
 use Nosto\Object\Product\Product as NostoProduct;
+use Nosto\Object\Product\Variation;
+use Nosto\Object\Product\VariationCollection;
 use Nosto\Tagging\Helper\Currency as CurrencyHelper;
 use Nosto\Tagging\Helper\Data as NostoHelperData;
 use Nosto\Tagging\Helper\Price as NostoPriceHelper;
@@ -55,6 +57,7 @@ use Nosto\Tagging\Model\Product\Sku\Collection as NostoSkuCollection;
 use Nosto\Tagging\Model\Product\Tags\LowStock as LowStockHelper;
 use Nosto\Tagging\Model\Product\Url\Builder as NostoUrlBuilder;
 use Nosto\Types\Product\ProductInterface;
+use Nosto\Tagging\Model\Product\Variation\Collection as PriceVariationCollection;
 use Nosto\Object\ModelFilter as ModelFilter;
 
 class Builder
@@ -82,6 +85,7 @@ class Builder
     private $skuCollection;
     private $nostoCurrencyHelper;
     private $lowStockHelper;
+    private $priceVariationCollection;
 
     /**
      * @param NostoHelperData $nostoHelperData
@@ -98,6 +102,7 @@ class Builder
      * @param NostoUrlBuilder $urlBuilder
      * @param CurrencyHelper $nostoCurrencyHelper
      * @param LowStockHelper $lowStockHelper
+     * @param PriceVariationCollection $priceVariationCollection
      */
     public function __construct(
         NostoHelperData $nostoHelperData,
@@ -113,7 +118,8 @@ class Builder
         GalleryReadHandler $galleryReadHandler,
         NostoUrlBuilder $urlBuilder,
         CurrencyHelper $nostoCurrencyHelper,
-        LowStockHelper $lowStockHelper
+        LowStockHelper $lowStockHelper,
+        PriceVariationCollection $priceVariationCollection
     ) {
         $this->nostoDataHelper = $nostoHelperData;
         $this->nostoPriceHelper = $priceHelper;
@@ -129,6 +135,7 @@ class Builder
         $this->skuCollection = $skuCollection;
         $this->nostoCurrencyHelper = $nostoCurrencyHelper;
         $this->lowStockHelper = $lowStockHelper;
+        $this->priceVariationCollection = $priceVariationCollection;
         $this->builderTraitConstruct($nostoHelperData, $logger);
     }
 
@@ -137,6 +144,7 @@ class Builder
      * @param Store $store
      * @param string $nostoScope
      * @return NostoProduct|null
+     * @throws \Exception
      */
     public function build(
         Product $product,
@@ -231,6 +239,9 @@ class Builder
             if (($tags = $this->buildTags($product, $store)) !== []) {
                 $nostoProduct->setTag1($tags);
             }
+
+            // ToDo - add check if the price variations are in use
+            $nostoProduct->setVariations($this->priceVariationCollection->build($product, $store));
 
             $nostoProduct->setCustomFields($this->buildCustomFields($product, $store));
 
