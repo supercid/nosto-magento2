@@ -38,12 +38,12 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\Framework\Stdlib\CookieManagerInterface" type="Magento\Framework\Stdlib\Cookie\PhpCookieManager"/>
     <preference for="Nosto\Tagging\Api\Data\ProductQueueSearchResultsInterface" type="Nosto\Tagging\Model\Product\QueueSearchResults"/>
-    <preference for="Magento\Email\Model\Source\Variables" type="Nosto\Tagging\Model\Config\Source\Email\Variables"/>
+    <preference for="Magento\Email\Model\Template\Filter" type="Nosto\Tagging\Model\Email\Template\Filter"/>
     <type name="Magento\Catalog\Model\ResourceModel\Product">
         <plugin name="nostoProductIndexer" type="Nosto\Tagging\Model\Indexer\Product\Observer"/>
     </type>
-    <type name="Magento\Email\Model\Source\Variables">
-        <plugin name="nostoVariablesAddition" type="Nosto\Tagging\Model\Config\Source\Email\Variables"/>
+    <type name="Magento\Email\Model\Template">
+        <plugin name="nostoEmailTemplateAddition" type="Nosto\Tagging\Model\Email\Template\Plugin"/>
     </type>
     <type name="Nosto\Tagging\Logger\Logger">
         <arguments>
