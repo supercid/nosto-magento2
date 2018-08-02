@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="CheckProductPage">
+        <amOnPage url="/radiant-tee.html" stepKey="amOnSimpleProductPage"/>
+        <waitForPageLoad stepKey="waitForPageLoad"/>
+
+        <assertElementContainsAttribute selector=".nosto_product" attribute="style" expectedValue="display: none;" stepKey="assertContainsNostoClass"/>
+        <seeElementInDOM selector=".nosto_product > .name" stepKey="seeElementInDOM1"/>
+        <executeJS function="jQuery('.notranslate').removeAttr('style');" stepKey="showNoTranslateDiv"/>
+        <executeJS function="jQuery('.nosto_product').removeAttr('style');" stepKey="showNostoProductDiv"/>
+        <waitForElementVisible selector=".nosto_product > .name" time="5" stepKey="waitForNostoProductElementToBeVisible"/>
+
+        <grabTextFrom selector=".nosto_product > .name" stepKey="stepGrabTextFromNostoProductName"/>
+        <assertEquals message="Radiant Tee" stepKey="assertEqualsProductName">
+            <expectedResult type="string">Radiant Tee</expectedResult>
+            <actualResult type="string">{$stepGrabTextFromNostoProductName}</actualResult>
+        </assertEquals>
+
+        <grabTextFrom selector=".nosto_product > .product_id" stepKey="stepGrabTextFromNostoProductId"/>
+        <assertEquals message="Product Id" stepKey="assertEqualsProductId">
+            <expectedResult type="string">1605</expectedResult>
+            <actualResult type="string">{$stepGrabTextFromNostoProductId}</actualResult>
+        </assertEquals>
+
+        <grabTextFrom selector=".nosto_product > .price" stepKey="stepGrabTextFromNostoProductPrice"/>
+        <assertEquals message="Price" stepKey="assertProductPrice">
+            <expectedResult type="string">22</expectedResult>
+            <actualResult type="string">{$stepGrabTextFromNostoProductPrice}</actualResult>
+        </assertEquals>
+
+        <grabTextFrom selector=".nosto_product > .list_price" stepKey="stepGrabTextFromNostoProductListPrice"/>
+        <assertEquals message="List Price" stepKey="assertEqualsProductListPrice">
+            <expectedResult type="string">22.0000</expectedResult>
+            <actualResult type="string">{$stepGrabTextFromNostoProductListPrice}</actualResult>
+        </assertEquals>
+
+        <grabTextFrom selector=".nosto_product > .availability" stepKey="stepGrabTextFromNostoProductAvailability"/>
+        <assertEquals message="Availability" stepKey="assertEqualsProductAvailability">
+            <expectedResult type="string">InStock</expectedResult>
+            <actualResult type="string">{$stepGrabTextFromNostoProductAvailability}</actualResult>
+        </assertEquals>
+
+        <grabTextFrom selector=".nosto_product > .review_count" stepKey="stepGrabTextFromNostoProductReviewCount"/>
+        <assertEquals message="Product Review Count" stepKey="assertEqualsProductReviewCount">
+            <expectedResult type="string">3</expectedResult>
+            <actualResult type="string">{$stepGrabTextFromNostoProductReviewCount}</actualResult>
+        </assertEquals>
+
+        <grabTextFrom selector=".nosto_product > .rating_value" stepKey="stepGrabTextFromNostoProductRatingValue"/>
+        <assertEquals message="Product Rating Value" stepKey="assertEqualsProductRatingValue">
+            <expectedResult type="string">3</expectedResult>
+            <actualResult type="string">{$stepGrabTextFromNostoProductRatingValue}</actualResult>
+        </assertEquals>
+
+    </actionGroup>
+</actionGroups>
