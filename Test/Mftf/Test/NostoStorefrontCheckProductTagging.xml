@@ -12,6 +12,20 @@
             <testCaseId value="NOSTOFT-0001"/>
             <group value="nosto"/>
         </annotations>
-        <actionGroup ref="CheckProductPage" stepKey="checkSampleProduct"/>
+        <before>
+            <createData entity="_defaultCategory" stepKey="createCategory1"/>
+            <createData entity="productWithDescription" stepKey="createProduct1">
+                <requiredEntity createDataKey="createCategory1"/>
+            </createData>
+        </before>
+        <after>
+            <deleteData createDataKey="createProduct1" stepKey="deleteProduct1"/>
+            <deleteData createDataKey="createCategory1" stepKey="deleteCategory1"/>
+        </after>
+        <!-- This action depends on Magento's catalog module -->
+        <actionGroup ref="CheckProductPage" stepKey="checkSampleProduct">
+            <argument name="product" value="$$createProduct1$$"/>
+        </actionGroup>
+
     </test>
 </tests>
