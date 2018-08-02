@@ -16,6 +16,22 @@ The preferred way of installing the extension is via [Composer](https://getcompo
 
 For complete installation instructions please see our [Wiki](https://github.com/Nosto/nosto-magento2/wiki)
 
+## Functional Testing Using MFTF
+
+In order to run the tests for this extension, you need t have at least Magento 2.2 with Magento Functional Testing Framework installed as a composer dependency.
+The tests are located under the `Test` directory.
+
+Refer to Magento DevDocs in order to prepare Magento.
+[M2 DevDocs](https://devdocs.magento.com/guides/v2.2/magento-functional-testing-framework/release-2/getting-started.html)
+
+Currently there is a bug in the MFTF (2.2.0) that does not allow the tests to run from the `vendor` folder. <br>
+You need to copy the nosto extension into the `%MagentoRootInstallation%/app/code/Nosto/Tagging` directory.
+
+To run the suite, head to `%MagentoRootInstallation%/dev/tests/acceptance` and run the following command: <br>
+```bash 
+vendor/bin/robo generate:tests && vendor/bin/codecept run functional --group nosto
+```
+
 ## License
 
 Open Software License ("OSL") v3.0
