@@ -9,7 +9,7 @@
             <title value="You should be able to check the Nosto Tagging from the Product Detail Page"/>
             <description value="You should be able to check the Nosto Tagging from the Product Detail Page"/>
             <severity value="BLOCKER"/>
-            <testCaseId value="NOSTOFT-0001"/>
+            <testCaseId value="NOSTOFT-0002"/>
             <group value="nosto"/>
         </annotations>
         <before>

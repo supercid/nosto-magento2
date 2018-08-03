@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="NostoStorefrontCheckGeneralTagging">
+        <annotations>
+            <features value="Check General Tagging"/>
+            <stories value="Open Front Page and Check Nosto Script And JS Stub Are Present"/>
+            <title value="You should be able to open the front page and check that the Nosto script is present"/>
+            <severity value="BLOCKER"/>
+            <testCaseId value="NOSTOFT-0001"/>
+            <group value="nosto"/>
+        </annotations>
+        <actionGroup ref="CheckGeneralTaggingOnPage" stepKey="checkGeneralTagging"/>
+    </test>
+</tests>

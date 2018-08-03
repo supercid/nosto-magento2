@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Product meta field in Magento/Catalog/Test/Mftf/Metadata/product-meta.xml -->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="CheckGeneralTaggingOnPage">
+        <arguments>
+            <argument name="url" defaultValue="/" type="string" />
+        </arguments>
+        <amOnPage stepKey="amOnStorefrontPage"  url="{{url}}"/>
+        <waitForPageLoad stepKey="waitForPageLoad"/>
+        <!-- Check If Meta Tags Are Present On Page -->
+        <seeElementInDOM selector="meta[name=nosto-version]" stepKey="seeVersionMetaInDOM"/>
+        <seeElementInDOM selector="meta[name=nosto-unique-id]" stepKey="seeUniqueIdMetaInDOM"/>
+        <seeElementInDOM selector="meta[name=nosto-language]" stepKey="seeLanguageMetaDOM"/>
+        <!-- Test Include Script Is Present On Page -->
+        <executeJS function="nosto.debugLog" stepKey="checkNostoScriptIsIncludedOnPage"/>
+        <dontSeeJsError stepKey="checkDebugLogRan"/>
+
+        <!-- Test Nosto Stub Script Is Present On Page -->
+        <executeJS function="nostojs" stepKey="checkNostoStubScriptIsOnPage"/>
+        <dontSeeJsError stepKey="checkStubRan"/>
+
+        <!-- Check Nosto Customer Id Cookie Is Present -->
+        <seeCookie userInput="2c.cId" stepKey="seeCookie1"/>
+
+    </actionGroup>
+</actionGroups>
