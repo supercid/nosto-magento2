@@ -1,0 +1,112 @@
+<?php
+/**
+ * Copyright (c) 2017, Nosto Solutions Ltd
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Nosto Solutions Ltd <contact@nosto.com>
+ * @copyright 2017 Nosto Solutions Ltd
+ * @license http://opensource.org/licenses/BSD-3-Clause BSD 3-Clause
+ *
+ */
+
+/** @var \Nosto\Tagging\Block\Email $this */
+?>
+<div style="border: 2px solid #333; background-color: #fafafa">
+    <h2>DEBUG</h2>
+    NOSTO ACCOUNT: <?php echo $this->getNostoAccountName(); ?><br />
+    EMAIL: <?php echo $this->getRecipientEmailAddress(); ?><br />
+    TYPE: <?php echo $this->getRecommendationType(); ?><br />
+    URL: <?php echo $this->getRecommendationImageSource(1); ?><br />
+</div>
+<?php if ($this->canRenderRecos()): ?>
+<!--[if mso]>
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="580px"><tbody><tr><td>
+<![endif]-->
+<table class="nostoTemplateWrapper" border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#ffffff" style="width: 580px; background-color: #ffffff;">
+    <tbody>
+    <tr>
+        <td align="center" valign="top" style="padding:0;">
+            <h2 class="nostoHeader" style="font-family: Arial; font-size: 24px; font-weight: normal; text-align: CENTER; color: #000000; text-decoration: none; font-style: normal; padding: 20px 0 20px 0 !important; margin: 0 !important;"><?php echo $this->getHeading(); ?></h2>
+
+            <table class="nostoTemplateRow" style="border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; position: relative; padding: 0px; table-layout: fixed;">
+                <tbody>
+                <tr>
+                    <td align="center" valign="top" style="font-size:0;padding:0;text-align:center;">
+                        <!--[if mso]>
+                        <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="580"><tbody>
+                        <![endif]-->
+
+                        <!-- Product -->
+                        <!--[if mso]>
+                        <tr>
+                        <![endif]-->
+                        <?php for($x=1; $x<=$this->getProductAmount(); $x++): ?>
+                            <!--[if mso]>
+                            <td align="center" valign="top" width="125">
+                            <![endif]-->
+                            <div class="nostoTemplateColumnContainer" style="display: inline-table; max-width: 24.75%; width: 100%; word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: left; position: relative; color: #222222; margin: 20px 0 20px 0; padding: 0px;">
+                                <table class="nostoTemplateColumn" style="display: inline-table; word-break: break-word; border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; width: 100%; margin: 0 auto; padding: 0;">
+                                    <tbody>
+                                    <tr style="vertical-align: bottom; text-align: left; padding: 0;">
+                                        <td class="nostoImageProductContainer" style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: middle; text-align: center; color: #222222; margin: 0; padding: 0 10px 0 10px; height: 125px" align="center" valign="bottom">
+                                            <a href="<?php echo $this->getRecommendationLink($x); ?>" style="color: #2ba6cb; text-decoration: none;">
+                                                <img class="nostoImageProduct" border="0" height="auto" width="125" src="<?php echo $this->getRecommendationImageSource($x); ?>" alt="" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; height: auto; float: none; clear: both; display: block; margin: 0 auto; border: none; max-width: 100%; max-height: 125px">
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr style="vertical-align: bottom; text-align: left; padding: 0;">
+                                        <td style="word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border-collapse: collapse !important; vertical-align: top; text-align: center; color: #222222; margin: 0; padding: 0 10px 0 10px;" align="center" valign="top">
+                                            <a href="<?php echo $this->getRecommendationLink($x); ?>" style="color: #2ba6cb; text-decoration: none;">
+                                                <img class="nostoImageDescription" border="0" height="auto" width="125" src="<?php echo $this->getRecommendationDescriptionSource($x); ?>" alt="" style="outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; height: auto; float: none; clear: both; display: block; margin: 0 auto; border: none; max-width: 125px;">
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <!--[if mso]>
+                        </td>
+                        <![endif]-->
+                        <!-- End Product -->
+                        <?php endfor; ?>
+                        <!--[if mso]>
+                        </tr>
+                        <![endif]-->
+                        <!-- End Product 4 -->
+                        <!--[if mso]>
+                        </tbody></table>
+                        <![endif]-->
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<?php endif; ?>
