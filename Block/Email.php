@@ -44,6 +44,7 @@ use Nosto\Tagging\Helper\Data as NostoHelperData;
 use Nosto\Tagging\Helper\Scope as NostoHelperScope;
 use Nosto\Object\Signup\Account as NostoSignupAccount;
 use Nosto\Nosto;
+use Nosto\Request\Http\HttpRequest;
 
 /**
  * Meta data block for outputting <meta> elements in the page <head>.
@@ -51,7 +52,7 @@ use Nosto\Nosto;
  */
 class Email extends Template
 {
-    const EMAIL_WIDGET_VERSION = '2.8.0';
+    const EMAIL_WIDGET_VERSION = '2.0.8';
 
     use TaggingTrait {
         TaggingTrait::__construct as taggingConstruct; // @codingStandardsIgnoreLine
@@ -120,11 +121,11 @@ class Email extends Template
      *
      * @return string|null
      */
-    public function getRecommendationType()
+    public function getWidgetId()
     {
-        $type = $this->getData('recotype');
-        if ($type) {
-            return $type;
+        $widgetId = $this->getData('widget_id');
+        if ($widgetId) {
+            return $widgetId;
         }
 
         return null;
@@ -171,7 +172,7 @@ class Email extends Template
         $src = sprintf('http://%s/image/v1/%s/%s/%d/?uid=%s&amp;version=%s',
             Nosto::getServerUrl(),
             $this->getNostoAccountName(),
-            $this->getRecommendationType(),
+            $this->getWidgetId(),
             $number,
             $this->getRecipientEmailAddress(),
             self::EMAIL_WIDGET_VERSION
@@ -191,7 +192,7 @@ class Email extends Template
         $src = sprintf('http://%s/image/v1/%s/%s/%d/desc?uid=%s&amp;version=%s',
             Nosto::getServerUrl(),
             $this->getNostoAccountName(),
-            $this->getRecommendationType(),
+            $this->getWidgetId(),
             $number,
             $this->getRecipientEmailAddress(),
             self::EMAIL_WIDGET_VERSION
@@ -211,10 +212,28 @@ class Email extends Template
         $src = sprintf('http://%s/image/v1/%s/%s/%d/go?uid=%s&amp;version=%s',
             Nosto::getServerUrl(),
             $this->getNostoAccountName(),
-            $this->getRecommendationType(),
+            $this->getWidgetId(),
             $number,
             $this->getRecipientEmailAddress(),
             self::EMAIL_WIDGET_VERSION
+        );
+
+        return $src;
+    }
+
+    /**
+     * Returns the snippet URL
+     *
+     * @param $number
+     * @return string
+     */
+    public function getSnippetUrl()
+    {
+//        /image/v1/{merc}/{imageCampaignId}/snippet
+        $src = sprintf('http://%s/image/v1/%s/%s/snippet',
+            Nosto::getServerUrl(),
+            $this->getNostoAccountName(),
+            $this->getWidgetId()
         );
 
         return $src;
@@ -228,7 +247,7 @@ class Email extends Template
      */
     public function canRenderRecos()
     {
-        return $this->getNostoAccountName() && $this->getRecommendationType();
+        return $this->getNostoAccountName() && $this->getWidgetId();
     }
 
     /**
@@ -237,5 +256,22 @@ class Email extends Template
     public function getAbstractObject()
     {
         return null;
+    }
+
+    public function _toHtml()
+    {
+        // ToDo
+        // - move logic for fetching snippet into SDK
+        // - create operation class for fetching snippet into SDK
+        // - the logic for saving must be implemented
+        if ($this->canRenderRecos()) {
+            $request = new HttpRequest();
+            $request->setUrl($this->getSnippetUrl());
+            $response = $request->get($request);
+
+            return $response->getResult();
+        }
+
+        return '';
     }
 }
