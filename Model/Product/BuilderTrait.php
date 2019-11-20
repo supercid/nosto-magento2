@@ -221,6 +221,7 @@ trait BuilderTrait
      */
     public function isInStock(Product $product, Store $store)
     {
+        // @TODO: Check if MSI is enabled
         return $this->stockService->isInStock($product, $store);
     }
 

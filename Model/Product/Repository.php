@@ -49,6 +49,7 @@ use Magento\Framework\Api\Search\FilterGroupBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Store\Model\Store;
 use Nosto\Tagging\Model\ResourceModel\Sku as NostoSkuResource;
+use Magento\Inventory\Model\SourceItemRepository;
 
 /**
  * Repository wrapper class for fetching products
@@ -69,6 +70,8 @@ class Repository
     private $configurableType;
     private $productVisibility;
     private $nostoSkuResource;
+    /** @var SourceItemRepository */
+    private $sourceItemRepository;
 
     /**
      * Constructor to instantiating the reindex command. This constructor uses proxy classes for
@@ -85,6 +88,7 @@ class Repository
      * @param ConfigurableType $configurableType
      * @param ProductVisibility $productVisibility
      * @param NostoSkuResource $nostoSkuResource
+     * @param SourceItemRepository $sourceItemRepository
      */
     public function __construct(
         ProductRepository $productRepository,
@@ -94,7 +98,8 @@ class Repository
         FilterGroupBuilder $filterGroupBuilder,
         ConfigurableType $configurableType,
         ProductVisibility $productVisibility,
-        NostoSkuResource $nostoSkuResource
+        NostoSkuResource $nostoSkuResource,
+        SourceItemRepository $sourceItemRepository
     ) {
         $this->productRepository = $productRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
@@ -104,6 +109,7 @@ class Repository
         $this->configurableType = $configurableType;
         $this->productVisibility = $productVisibility;
         $this->nostoSkuResource = $nostoSkuResource;
+        $this->sourceItemRepository = $sourceItemRepository;
     }
 
     /**
@@ -193,7 +199,6 @@ class Repository
             ->addFilter('entity_id', $skuIds, 'in')
             ->create();
         $products = $this->productRepository->getList($searchCriteria)->setTotalCount(self::MAX_SKUS);
-
         return $products->getItems();
     }
 
@@ -255,5 +260,27 @@ class Repository
     public function getSkusAsArray(Product $product, Store $store)
     {
         return $this->nostoSkuResource->getSkusByIds($store, $this->getSkuIds($product));
+    }
+
+    /**
+     * When using MSI, fetch stock using this
+     *
+     * @param array $skuIds
+     * @return mixed
+     */
+    public function getSkusInventoryLevel(array $skuIds)
+    {
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter('sku', $skuIds, 'in')
+            ->create();
+        return $this->sourceItemRepository->getList($searchCriteria);
+    }
+
+    public function getInventoryLevelSku($skuId)
+    {
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter('sku', $skuId, 'eq')
+            ->create();
+        return $this->sourceItemRepository->getList($searchCriteria);
     }
 }

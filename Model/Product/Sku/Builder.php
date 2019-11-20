@@ -73,6 +73,7 @@ class Builder
      * @param ManagerInterface $eventManager
      * @param CurrencyHelper $nostoCurrencyHelper
      * @param StockService $stockService
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         NostoHelperData $nostoHelperData,

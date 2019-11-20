@@ -43,23 +43,86 @@ use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\GroupedProduct\Model\Product\Type\Grouped;
 use Magento\Store\Model\Store;
 use Nosto\Tagging\Model\Service\Stock\Provider\StockProviderInterface;
+use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
+use Magento\CatalogInventory\Model\Spi\StockRegistryProviderInterface;
+use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\CatalogInventory\Api\StockConfigurationInterface;
+use Magento\InventoryApi\Api\StockRepositoryInterface;
+use Magento\Inventory\Model\ResourceModel\IsProductAssignedToStock;
+use Magento\InventoryCatalog\Model\GetSourceItemsBySkuAndSourceCodes;
+use Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface;
 
 /**
  * StockService helper used for product inventory level related tasks.
  */
 class StockService
 {
+    /** @var GetStockIdForCurrentWebsite */
+    private $getStockIdForCurrentWebsite;
+
     private $stockProvider;
+    /**
+     * @var IsProductSalableInterface
+     */
+    private $isProductSalable;
+    /**
+     * @var StockRegistryProviderInterface
+     */
+    private $stockRegistryProvider;
+    /**
+     * @var StockConfigurationInterface
+     */
+    private $stockConfiguration;
+    /**
+     * @var StockRepositoryInterface
+     */
+    private $stockRepository;
+    /**
+     * @var IsProductAssignedToStock
+     */
+    private $isProductAssignedToStock;
+    /**
+     * @var GetSourceItemsBySkuAndSourceCodes
+     */
+    private $getSourceItemsBySkuAndSourceCodes;
+    /**
+     * @var IsSingleSourceModeInterface
+     */
+    private $isSingleSourceMode;
 
     /**
      * Constructor.
      *
      * @param StockProviderInterface $stockProvider
+     * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
+     * @param IsProductSalableInterface $isProductSalable
+     * @param StockRegistryProviderInterface $stockRegistryProvider
+     * @param StockConfigurationInterface $stockConfiguration
+     * @param StockRepositoryInterface $stockRepository
+     * @param IsProductAssignedToStock $isProductAssignedToStock
+     * @param GetSourceItemsBySkuAndSourceCodes $getSourceItemsBySkuAndSourceCodes
+     * @param IsSingleSourceModeInterface $isSingleSourceMode
      */
     public function __construct(
-        StockProviderInterface $stockProvider
+        StockProviderInterface $stockProvider,
+        GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite,
+        IsProductSalableInterface $isProductSalable,
+        StockRegistryProviderInterface $stockRegistryProvider,
+        StockConfigurationInterface $stockConfiguration,
+        StockRepositoryInterface $stockRepository,
+        IsProductAssignedToStock $isProductAssignedToStock,
+        GetSourceItemsBySkuAndSourceCodes $getSourceItemsBySkuAndSourceCodes,
+        IsSingleSourceModeInterface $isSingleSourceMode
     ) {
+        $this->getStockIdForCurrentWebsite = $getStockIdForCurrentWebsite;
         $this->stockProvider = $stockProvider;
+        $this->isProductSalable = $isProductSalable;
+        $this->stockRegistryProvider = $stockRegistryProvider;
+        $this->stockConfiguration = $stockConfiguration;
+        $this->stockRepository = $stockRepository;
+        $this->isProductAssignedToStock = $isProductAssignedToStock;
+        $this->getSourceItemsBySkuAndSourceCodes = $getSourceItemsBySkuAndSourceCodes;
+        $this->isSingleSourceMode = $isSingleSourceMode;
     }
 
     /**
@@ -161,9 +224,49 @@ class StockService
      */
     public function isInStock(Product $product, Store $store)
     {
+//        $this->getStockIdForCurrentWebsite->execute();
+        $test = $this->getStockStatus($product, $store);
         return (bool)$this->stockProvider->getStockItem(
             $product->getId(),
             $store->getWebsiteId()
         )->getIsInStock();
+    }
+
+    /**
+     * @param Product $product
+     * @param Store $store
+     * @return int
+     */
+    public function getStockStatus(Product $product, Store $store)
+    {
+//        $stock = $this->stockResolver->execute(
+//            \Magento\InventorySalesApi\Api\Data\SalesChannelInterface::TYPE_WEBSITE,
+//            $store->getWebsite()->getCode()
+//        );
+//        $stockId = (int)$stock->getStockId();
+        $stockId = 2;
+
+        $inventoryShit = $this->getSourceItemsBySkuAndSourceCodes->execute($product->getSku(), ['second-source']);
+        if ($this->isSingleSourceMode->execute()){
+            // Use regular registry
+        } else {
+            // Use new MSI stock
+        }
+
+        $test = $this->stockRepository->get($stockId);
+        $status = $this->isProductSalable->execute($product->getId(), $stockId);
+        $skuShit = $this->isProductAssignedToStock->execute('WS12-XS-Blue', $stockId);
+        if (!$status) {
+            $websiteId = $store->getWebsiteId();
+            $stockItem = $this->stockRegistryProvider->getStockItem($product->getId(), $websiteId);
+            $inStock = $stockItem->getIsInStock();
+            $stockItem = $this->stockRegistryProvider->getStockItem(
+                $product->getId(),
+                $this->stockConfiguration->getDefaultScopeId()
+            );
+            $status = $stockItem->getIsInStock();
+            $this->stockRegistryProvider->getStockItem($product->getId(), 2);
+        }
+        return $status;
     }
 }

@@ -1,6 +1,9 @@
 All notable changes to this project will be documented in this file. This project adheres to Semantic Versioning.
 
-### 4.0.0-rc4 (unreleased)
+### 4.0.0-rc5 (pre-release)
+* Amend fixes from [3.10.1](###3.10.1) (null check for customer)
+
+### 4.0.0-rc4 (pre-release)
 * Amend fixes from [3.10.0](###3.10.0) (SKU collection building speed)
 * Add a caching layer for storing already built category strings
 
@@ -19,6 +22,9 @@ All notable changes to this project will be documented in this file. This projec
 * Add support for indexing in parallel mode
 * Cleanup the change log database tables after indexer run
 * Prevent full reindex on `setup:upgrade`
+
+### 3.10.1
+* Fix an issue with sending order confirmations via API when customer details could not be resolved
 
 ### 3.10.0
 * Speed-up sku collection building by using native magento method to fetch configurable product SKU's
