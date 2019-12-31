@@ -96,9 +96,9 @@ class Indexer implements IndexerActionInterface, MviewActionInterface
      */
     public function executeFull()
     {
-        if ($this->dataHelper->isFullReindexEnabled()
+        if($this->dataHelper->isFullReindexEnabled()
             && !empty($this->nostoHelperAccount->getStoresWithNosto())
-        ) {
+        ){
             // Truncate queue table before first execution if they have leftover products
             if ($this->nostoQueueRepository->isQueuePopulated()) {
                 $this->nostoQueueRepository->truncate();
