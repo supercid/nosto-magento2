@@ -96,18 +96,18 @@ class Indexer implements IndexerActionInterface, MviewActionInterface
      */
     public function executeFull()
     {
-        if ($this->dataHelper->isFullReindexEnabled()
+        if($this->dataHelper->isFullReindexEnabled()
             && !empty($this->nostoHelperAccount->getStoresWithNosto())
-        ) {
+        ){
             // Truncate queue table before first execution if they have leftover products
-            if ($this->nostoQueueRepository->isQueuePopulated()) {
+            if($this->nostoQueueRepository->isQueuePopulated()){
                 $this->nostoQueueRepository->truncate();
             }
             $productCollectionAll = $this->getCollection();
             $productCollectionAll->setPageSize(self::BATCH_SIZE);
             $lastPage = $productCollectionAll->getLastPageNumber();
             $pageNumber = 1;
-            do {
+            do{
                 $productCollection = $this->getCollection();
                 $productCollection->setPageSize(self::BATCH_SIZE);
                 $productCollection->setCurPage($pageNumber);
