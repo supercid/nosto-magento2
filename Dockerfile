@@ -82,7 +82,8 @@ RUN         a2enmod rewrite && phpenmod soap && \
 
 RUN         php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php && \
             php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
-            php -r "unlink('composer-setup.php');"
+            php -r "unlink('composer-setup.php');" && \
+            composer self-update 1.10.22
 
 RUN        service mysql start && \
            mysql -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('root');" && \
